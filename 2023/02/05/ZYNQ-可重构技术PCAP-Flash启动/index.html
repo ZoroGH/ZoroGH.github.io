@@ -27,7 +27,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/image-20230205134538834.png">
 <meta property="article:published_time" content="2023-02-05T03:20:26.000Z">
-<meta property="article:modified_time" content="2023-02-05T10:20:59.009Z">
+<meta property="article:modified_time" content="2023-02-06T12:14:59.210Z">
 <meta property="article:author" content="ZoroGH">
 <meta property="article:tag" content="ZYNQ">
 <meta property="article:tag" content="Flash">
@@ -82,7 +82,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"blog.zorogh.top","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":50,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":3},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"blog.zorogh.top","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":50,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":3},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":"G-PJ2GQQR343","gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -93,9 +93,36 @@
   <script  src="/js/color-schema.js" ></script>
   
 
+  
 
   
-<meta name="generator" content="Hexo 5.4.2"></head>
+    <!-- Google Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
+          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
+          ga.l = +new Date;
+          ga('create', 'G-PJ2GQQR343', 'auto');
+          ga('send', 'pageview');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 
 <body>
@@ -288,7 +315,7 @@
               <div class="markdown-body">
                 
                 <h1 id="intro">Intro</h1>
-<p>上一篇博客<a href="/2023/02/04/ZYNQ-%E5%8F%AF%E9%87%8D%E6%9E%84%E6%8A%80%E6%9C%AFPCAP/" title="ZYNQ|可重构技术PCAP--例程学习">ZYNQ|可重构技术PCAP--例程学习</a>中实现了从DDR到PL端的过程。然而在实际生产中，不能通过JTAG下载elf文件到PS再进行可重构，这就要求产品需要用非易失存储器来保存代码。ZYNQ官方文档指定的非易失存储器有4种：QSPI、SD卡、NAND、NOR，具体参考UG585第六章。笔者使用的是Alinx7020开发板，其PS端的MIO[2:6]连接着一片Flash，而对该Flash的读写则可通过ZYNQ内置QSPI控制器来读写。</p>
+<p>上一篇博客<a href="/2023/02/04/ZYNQ-%E5%8F%AF%E9%87%8D%E6%9E%84%E6%8A%80%E6%9C%AFPCAP/" title="ZYNQ | 可重构技术PCAP(1)——例程学习">ZYNQ|可重构技术PCAP--例程学习</a>中实现了从DDR到PL端的过程。然而在实际生产中，不能通过JTAG下载elf文件到PS再进行可重构，这就要求产品需要用非易失存储器来保存代码。ZYNQ官方文档指定的非易失存储器有4种：QSPI、SD卡、NAND、NOR，具体参考UG585第六章。笔者使用的是Alinx7020开发板，其PS端的MIO[2:6]连接着一片Flash，而对该Flash的读写则可通过ZYNQ内置QSPI控制器来读写。</p>
 <p>生产环境下的效果应该是：</p>
 <ol type="1">
 <li>选择QSPI模式进行启动</li>
@@ -302,7 +329,7 @@
 <blockquote>
 <p>A <code>.bin</code> file is the binary representation of the configuration bitstream. The <code>.bit</code> contains the configuration data plus additional data in the bit file header.</p>
 </blockquote>
-<p>具体转换方法参考<a href="/2023/02/04/ZYNQ-%E5%8F%AF%E9%87%8D%E6%9E%84%E6%8A%80%E6%9C%AFPCAP/" title="上一篇博客">上一篇博客</a>。</p>
+<p>具体转换方法参考<a href="/2023/02/04/ZYNQ-%E5%8F%AF%E9%87%8D%E6%9E%84%E6%8A%80%E6%9C%AFPCAP/" title="ZYNQ | 可重构技术PCAP(1)——例程学习">上一篇博客</a>。</p>
 <h2 id="烧写flash">烧写Flash</h2>
 <p>打开SDK，将准备好的<code>.bin</code>文件烧写进Flash中。</p>
 <figure>
@@ -445,7 +472,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年2月5日</div>
+          <div>2023年2月6日</div>
         </div>
       
       
