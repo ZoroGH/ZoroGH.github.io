@@ -1,3 +1,8 @@
+body > main > div.container.nopadding-x-md>#board
+{
+    width: 110%;
+    left: -5%;
+}
 .col-lg-8.nopadding-x-md>.container.nopadding-x-md>#board {
     width: 130%;
     left: -15%;
@@ -16,6 +21,13 @@
         left: 0;
     }
 }
+
+.markdown-body figcaption.image-caption
+{
+    margin: 0.75rem auto 2rem;
+}
+
+
 
 h1,
 h2,
