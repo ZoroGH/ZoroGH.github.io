@@ -1,4 +1,4 @@
-body > main > div.container.nopadding-x-md>#board
+/* body > main > div.container.nopadding-x-md>#board
 {
     width: 110%;
     left: -5%;
@@ -6,7 +6,7 @@ body > main > div.container.nopadding-x-md>#board
 .col-lg-8.nopadding-x-md>.container.nopadding-x-md>#board {
     width: 130%;
     left: -15%;
-}
+} */
 
 @media (max-width: 767px) {
     .col-lg-8.nopadding-x-md>.container.nopadding-x-md>#board {
