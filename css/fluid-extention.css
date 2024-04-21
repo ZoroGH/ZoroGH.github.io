@@ -36,7 +36,7 @@ h4,
 h5,
 h6 {
     font-family: var(--title-font);
-    position: relative;
+    /* position: relative; */
     margin-top: 2rem;
     margin-bottom: 1rem;
     font-weight: bold;
@@ -226,7 +226,7 @@ blockquote:before {
 }
 
  :root {
-    /* font-family: 'Fira Code'; */
+    font-family: 'Fira Code';
     --text-color: #b3bec4;
     --bg-color: #212121;
     --control-text-color: var(--text-color);
