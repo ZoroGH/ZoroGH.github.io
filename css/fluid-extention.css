@@ -1,274 +1,36 @@
-/* body > main > div.container.nopadding-x-md>#board
-{
-    width: 110%;
-    left: -5%;
-}
-.col-lg-8.nopadding-x-md>.container.nopadding-x-md>#board {
-    width: 130%;
-    left: -15%;
-} */
+/* 
+  通用文章内容图片样式
+  将此样式应用于包裹您博客文章的容器上，
+  例如 <div class="post-content">...</div>
+*/
 
-@media (max-width: 767px) {
-    .col-lg-8.nopadding-x-md>.container.nopadding-x-md>#board {
-        width: 100%;
-        left: 0;
-    }
-}
+.markdown-body img {
+    /* --- 尺寸限制 --- */
+    /* 最大宽度不超过 600px */
+    max-width: 600px;
 
-@media (max-width: 424px) {
-    .col-lg-8.nopadding-x-md>.container.nopadding-x-md>#board {
-        width: 100%;
-        left: 0;
-    }
-}
+    /* 最大高度不超过 800px */
+    max-height: 800px;
 
-.markdown-body figcaption.image-caption
-{
-    margin: 0.75rem auto 2rem;
-}
+    /* --- 保持图片比例和响应式 --- */
+    /* 确保在宽度缩小时，高度能自动按比例调整 */
+    height: auto;
 
-
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: var(--title-font);
-    /* position: relative; */
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    font-weight: bold;
-    line-height: 1.4;
-    cursor: text;
-    color: var(--title-color);
-}
-
-h3.md-focus:before,
-h4.md-focus:before,
-h5.md-focus:before,
-h6.md-focus:before {
-    visibility: hidden;
-}
-
-h1 {
-    font-size: 2rem;
-    /* text-align: center; */
-    margin-top: 0;
-}
-
-.markdown-body h1 {
-    text-align: center;
-}
-
-h2 {
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-}
-
-.on-focus-mode h2.md-end-block.md-heading:not(.md-focus):not(.md-focus-container):after {
-    background-color: var(--blur-text-color) !important;
-}
-
-h3 {
-    font-size: 1.4rem;
-}
-
-h4 {
-    font-size: 1.2rem;
-}
-
-h5 {
-    font-size: 1rem;
-}
-
-h6 {
-    font-size: 1rem;
-}
-
-h1:hover a.anchor,
-h2:hover a.anchor,
-h3:hover a.anchor,
-h4:hover a.anchor,
-h5:hover a.anchor,
-h6:hover a.anchor {
-    text-decoration: none;
-}
-
-h1 tt,
-h1 code {
-    font-size: inherit !important;
-}
-
-h2 tt,
-h2 code {
-    font-size: inherit !important;
-}
-
-h3 tt,
-h3 code {
-    font-size: inherit !important;
-}
-
-h4 tt,
-h4 code {
-    font-size: inherit !important;
-}
-
-h5 tt,
-h5 code {
-    font-size: inherit !important;
-}
-
-h6 tt,
-h6 code {
-    font-size: inherit !important;
-}
-
-p,
-blockquote,
-ul,
-ol,
-dl,
-table {
-    margin: var(--p-spacing) 0;
-}
-
-li>ol,
-li>ul {
-    margin: 0 0;
-}
-
-li {
-    margin: 0.5em 0;
-}
-
-.tocbot-active-link {
-    font-weight: bold;
-    /*color var(--link-hover-color)*/
-    color: #ca8080;
-    background: #FA807233;
-    border-radius: 5px;
-}
-
-.toc-list-item::before {
-    background: #ca8080;
-}
-
-.markdown-body strong {
-    color: var(--strong-color);
-    font-weight: bold;
-}
-
-
-/*code block*/
-
-.markdown-body figure code {
-    font-family: 'Fira Code';
-    padding: 0.5rem !important;
-    border-radius: 2px;
-    word-wrap: normal;
-    background-color: var(--code-block-bg-color);
-    color: var(--code-block-color);
-    border: none;
-    line-height: var(--code-line-height);
-}
-
-
-/*code snippet*/
-
-code,
-tt {
-    margin: 0 1px;
-    font-family: 'Fira Code';
-    color: var(--drake-highlight);
-}
-
-.markdown-body .highlight pre {
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-.markdown-body a:any-link {
-    color: var(--a-color);
-}
-
-.post-content,
-.post-custom {
-    box-sizing: border-box;
-    padding-left: 5%;
-    padding-right: 5%
-}
-
-
-/*quote block*/
-
-blockquote:before {
+    /* --- 视觉样式与布局 --- */
+    /* 将图片转换为块级元素，使其可以应用 margin 来居中 */
     display: block;
-    position: absolute;
-    content: '';
-    width: 4px;
-    left: 0;
-    top: 0;
-    height: 100%;
-    background-color: var(--blockquote-border-color);
-    border-radius: 2px;
-}
 
-.markdown-body blockquote {
-    color: var(--blockquote-color);
-    border-radius: 2px;
-    padding: 10px 16px;
-    background-color: var(--blockquote-bg-color);
-    position: relative;
-    border-left: none;
-}
+    /* 通过 auto 的外边距实现水平居中 */
+    margin-left: auto;
+    margin-right: auto;
 
- :root {
-    font-family: 'Fira Code';
-    --text-color: #b3bec4;
-    --bg-color: #212121;
-    --control-text-color: var(--text-color);
-    --meta-content-color: var(--text-color);
-    --active-file-border-color: var(--drake-accent);
-    --rawblock-edit-panel-bd: var(--code-block-bg-color);
-    --item-hover-bg-color: #323232;
-    --active-file-bg-color: var(--item-hover-bg-color);
-    --mermaid-theme: night;
-    --blur-text-color: rgba(179, 190, 196, 0.5);
-    --md-char-color: #535455;
-    --side-bar-bg-color: var(--bg-color);
-    --search-select-bg-color: #ffffff;
-    --search-select-text-color: var(--bg-color);
-    --select-text-bg-color: #3473B068;
-    --window-border: 1px solid #282828;
-    --drake-accent: #ff9800;
-    --drake-highlight: #ff9800;
-    --a-color: var(--drake-highlight);
-    --variable-color: var(--drake-highlight);
-    --outline-active-color: var(--a-color);
-    --code-block-bg-color: #1b1b1b;
-    --code-block-color: var(--text-color);
-    --title-color: #bbc6d2;
-    --blockquote-border-color: var(--drake-accent);
-    --blockquote-color: var(--text-color);
-    --blockquote-bg-color: rgba(255, 185, 82, 0.05);
-    --strong-color: var(--title-color);
-    --h2-underline-color: var(--title-color);
-    --horizontal-divider-color: var(--title-color);
-    --height-light-color: var(--drake-highlight);
-    --height-light-border-color: var(--drake-highlight);
-    --yaml-color: #676773;
-    --yaml-bg-color: var(--code-block-bg-color);
-    --footnotes-bg-color: var(--item-hover-bg-color);
-    --footnotes-highlight: #FFD760;
-    --table-border-color: var(--item-hover-bg-color);
-    --table-header-bg-color: #292929;
-    --table-bg-color: var(--bg-color);
-    --table-n2-bg-color: var(--table-header-bg-color);
-    --input-bg-color: var(--item-hover-bg-color);
-    --btn-hover-bg-color: var(--item-hover-bg-color);
-    --checkbox-checked: url("data:image/svg+xml,%3Csvg class='icon' viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cpath d='M425.984 726.016l384-384-59.99-61.995-324.01 324.011-152.021-152.021L213.973 512zm384-598.016q36.01 0 61.013 25.984T896 213.974v596.01q0 34.005-25.003 59.99t-61.013 25.983h-596.01q-36.011 0-61.014-25.984t-25.003-59.989v-596.01q0-34.006 25.003-59.99T213.973 128h596.011z' fill='%2365b73b'/%3E%3C/svg%3E");
-    --checkbox-unchecked: url("data:image/svg+xml,%3Csvg class='icon' viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cpath d='M810.667 213.333v597.334H213.333V213.333h597.334m0-85.333H213.333C166.4 128 128 166.4 128 213.333v597.334C128 857.6 166.4 896 213.333 896h597.334C857.6 896 896 857.6 896 810.667V213.333C896 166.4 857.6 128 810.667 128z' fill='%23acb7c4'/%3E%3C/svg%3E");
+    /* 给图片上下增加一点间距，使其与文字分开 */
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+
+    /* (可选) 添加一个细微的阴影，增加立体感 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    /* (可选) 如果需要，可以给图片添加圆角 */
+    border-radius: 8px;
 }
