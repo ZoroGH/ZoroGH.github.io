@@ -25,14 +25,16 @@
 <meta property="og:site_name" content="ZoroGH&#39;s Blog">
 <meta property="og:description" content="延续上一篇博客的内容，实现从Flash中读取bit流文件并将其烧录进PL端。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/image-20230205134538834.png">
 <meta property="article:published_time" content="2023-02-05T03:20:26.000Z">
-<meta property="article:modified_time" content="2023-02-05T10:18:18.287Z">
+<meta property="article:modified_time" content="2025-08-25T09:36:43.950Z">
 <meta property="article:author" content="ZoroGH">
 <meta property="article:tag" content="ZYNQ">
 <meta property="article:tag" content="Flash">
 <meta property="article:tag" content="QSPI">
 <meta property="article:tag" content="可重构">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/image-20230205134538834.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -322,28 +324,19 @@
 </ol>
 <p>为了简化开发流程，这里省略掉前2步，使用JTAG模式将PS端代码下载到开发板，然后执行步骤3和4。</p>
 <h1 id="preparation">Preparation</h1>
-<p>首先要了解FLash存储器中包含的即是我们要写到PL端的完整数据，而FPGA需要的是<code>.bit</code>文件而非<code>.bin</code>文件，这一点在上篇博客中也提到过，具体两者的区别可以参考Xilinx官方的一篇回答<a
-target="_blank" rel="noopener" href="https://support.xilinx.com/s/question/0D52E00006iHjvDSAS/how-to-use-pcap-to-config-the-pl-in-zynq?language=en_US">How
-to use PCAP to config the PL in
-zynq</a>,该帖子中<code>ckohn</code>是<em>部分可重构技术</em>文档的作者，他提到</p>
+<p>首先要了解FLash存储器中包含的即是我们要写到PL端的完整数据，而FPGA需要的是<code>.bit</code>文件而非<code>.bin</code>文件，这一点在上篇博客中也提到过，具体两者的区别可以参考Xilinx官方的一篇回答<a target="_blank" rel="noopener" href="https://support.xilinx.com/s/question/0D52E00006iHjvDSAS/how-to-use-pcap-to-config-the-pl-in-zynq?language=en_US">How to use PCAP to config the PL in zynq</a>,该帖子中<code>ckohn</code>是<em>部分可重构技术</em>文档的作者，他提到</p>
 <blockquote>
-<p>A <code>.bin</code> file is the binary representation of the
-configuration bitstream. The <code>.bit</code> contains the
-configuration data plus additional data in the bit file header.</p>
+<p>A <code>.bin</code> file is the binary representation of the configuration bitstream. The <code>.bit</code> contains the configuration data plus additional data in the bit file header.</p>
 </blockquote>
 <p>具体转换方法参考<a href="/2023/02/04/ZYNQ-%E5%8F%AF%E9%87%8D%E6%9E%84%E6%8A%80%E6%9C%AFPCAP/" title="上一篇博客">上一篇博客</a>。</p>
 <h2 id="烧写flash">烧写Flash</h2>
 <p>打开SDK，将准备好的<code>.bin</code>文件烧写进Flash中。</p>
 <figure>
-<img
-src="http://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/image-20230205134538834.png" srcset="/img/loading.gif" lazyload
-alt="烧写Flash" />
-<figcaption aria-hidden="true">烧写Flash</figcaption>
+<img src="http://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/image-20230205134538834.png" srcset="/img/loading.gif" lazyload alt="烧写Flash" /><figcaption aria-hidden="true">烧写Flash</figcaption>
 </figure>
 <p>这里的<code>Offset</code>即为文件在Flash中的起始地址，默认用0即可。</p>
 <h2 id="通过qspi读取flash">通过QSPI读取Flash</h2>
-<p>导入QSPI轮询例程，如果没有，需要返回到Vivado，在Block
-Design中将MIO部分的QSPI的打开。</p>
+<p>导入QSPI轮询例程，如果没有，需要返回到Vivado，在Block Design中将MIO部分的QSPI的打开。</p>
 <p>将QSPI例程中的ReadBuffer修改至合适大小，注意，这里可以选择直接在全局声明数组，或者在main中调用malloc函数。如果选择后者，那么需要在<code>lscript.ld</code>中将堆的大小修改至大于文件大小。</p>
 <p>简化后的函数如下</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-type">int</span> <span class="hljs-title function_">QspiFlashPolled</span><span class="hljs-params">(XQspiPs *QspiInstPtr, u16 QspiDeviceId,u32 Addr,u32 DataSize)</span><br>&#123;<br>	<span class="hljs-type">int</span> Status;<br>    <span class="hljs-comment">// 经典套路，查询并初始化</span><br>	XQspiPs_Config * QspiConfig = XQspiPs_LookupConfig(QSPI_DEVICE_ID);<br>	XQspiPs_CfgInitialize(QspiInstPtr, QspiConfig,QspiConfig-&gt;BaseAddress);<br>	<span class="hljs-comment">// 自检</span><br>    Status = XQspiPs_SelfTest(QspiInstPtr);<br>	<span class="hljs-keyword">if</span>(Status!=XST_SUCCESS)<br>	&#123;<br>		xil_printf(<span class="hljs-string">&quot;Self Test Failed\r\n&quot;</span>);<br>		<span class="hljs-keyword">return</span>;<br>	&#125;<br>	<span class="hljs-comment">// 例程自带选项不用改</span><br>	XQspiPs_SetOptions(QspiInstPtr, <br>                       XQSPIPS_MANUAL_START_OPTION | <br>                       XQSPIPS_FORCE_SSELECT_OPTION |<br>                       XQSPIPS_HOLD_B_DRIVE_OPTION);<br>	XQspiPs_SetClkPrescaler(QspiInstPtr, XQSPIPS_CLK_PRESCALE_8);<br>	XQspiPs_SetSlaveSelect(QspiInstPtr);<br>	<span class="hljs-comment">// 使能QSPI</span><br>	FlashQuadEnable(QspiInstPtr);<br>    <span class="hljs-comment">// Flash读函数，将数据读取到ReadBuffer中，ReadBuffer前4字节为Overhead</span><br>	FlashRead(QspiInstPtr, Addr, DataSize, READ_CMD);<br>	xil_printf(<span class="hljs-string">&quot;End reading flash\r\n&quot;</span>);<br>	<span class="hljs-keyword">return</span> XST_SUCCESS;<br>&#125;<br></code></pre></td></tr></table></figure>
@@ -370,25 +363,12 @@ Design中将MIO部分的QSPI的打开。</p>
 <p>XDcfgPolledExample()函数中实际起到关键作用的是XDcfg_Transfer()函数，参考API文档：</p>
 <blockquote>
 <p>This function starts the DMA transfer.</p>
-<p>This function only starts the operation and returns before the
-operation may be completed. If the interrupt is enabled, an interrupt
-will be generated when the operation is completed, otherwise it is
-necessary to poll the Status register to determine when it is completed.
-It is the responsibility of the caller to determine when the operation
-is completed by handling the generated interrupt or polling the Status
-Register.</p>
+<p>This function only starts the operation and returns before the operation may be completed. If the interrupt is enabled, an interrupt will be generated when the operation is completed, otherwise it is necessary to poll the Status register to determine when it is completed. It is the responsibility of the caller to determine when the operation is completed by handling the generated interrupt or polling the Status Register.</p>
 </blockquote>
 <blockquote>
 <p><strong><em>Note</em></strong></p>
-<p><strong><em>It is the responsibility of the caller to ensure that the
-cache is flushed and invalidated both before the DMA operation is
-started and after the DMA operation completes if the memory pointed to
-is cached.</em></strong> The caller must also ensure that the pointers
-contain physical address rather than a virtual address if address
-translation is being used.</p>
-<p>The 2 LSBs of the SourcePtr (Source)/ DestPtr (Destination) address
-when equal to 2'b01 indicates the last DMA command of an overall
-transfer.</p>
+<p><strong><em>It is the responsibility of the caller to ensure that the cache is flushed and invalidated both before the DMA operation is started and after the DMA operation completes if the memory pointed to is cached.</em></strong> The caller must also ensure that the pointers contain physical address rather than a virtual address if address translation is being used.</p>
+<p>The 2 LSBs of the SourcePtr (Source)/ DestPtr (Destination) address when equal to 2'b01 indicates the last DMA command of an overall transfer.</p>
 </blockquote>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs C">u32 <span class="hljs-title function_">XDcfg_Transfer</span>	<span class="hljs-params">(</span><br><span class="hljs-params">    XDcfg * 	InstancePtr,</span><br><span class="hljs-params">    <span class="hljs-type">void</span> * 	SourcePtr,</span><br><span class="hljs-params">    u32 	SrcWordLength,</span><br><span class="hljs-params">    <span class="hljs-type">void</span> * 	DestPtr,</span><br><span class="hljs-params">    u32 	DestWordLength,</span><br><span class="hljs-params">    u32 	TransferType </span><br><span class="hljs-params">)</span><br></code></pre></td></tr></table></figure>
 <p>文档提到这里是该函数本质上是DMA传输，DMA是对DDR3这个器件直接进行数据操作，因此，如果数据不在DDR中，自然也不会达到想要的效果。</p>
@@ -400,9 +380,7 @@ transfer.</p>
 <li>在DMA前进行Cache的Flush操作。</li>
 </ol>
 <h3 id="为什么会出现这个坑">为什么会出现这个坑</h3>
-<p>这个问题实际上叫“Cache一致性问题”<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span
-class="hint--top hint--rounded"
-aria-label="[ZYNQ Cache一致性问题和使用](https://blog.csdn.net/wangjie36/article/details/121460830)">[1]</span></a></sup>。</p>
+<p>这个问题实际上叫“Cache一致性问题”<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="[ZYNQ Cache一致性问题和使用](https://blog.csdn.net/wangjie36/article/details/121460830)">[1]</span></a></sup>。</p>
 <p>实验过程中，笔者通过XSCT窗口<code>mrd</code>命令下载了文件，进行了一次文件校验，校验结果显示从Flash中读取的文件没有错，的确如此，但是要注意，这里的XSCT窗口是直接与CPU打交道，因此当CPU再读取某一段数据时，如果数据存在于Cache中则会优先读取Cache中的数据，而非DDR中的数据。因此<code>mrd</code>命令是站在CPU的角度来观察整个<em>存储体系</em>。</p>
 <p>而DMA控制器作为DDR的另一个主控，直接与DDR进行数据交换，其对应的不是<strong><em>CPU视角下的整个存储体系</em></strong>。明白了这一点问题就容易多了。</p>
 <p>至此可重构实验基本完成。</p>
@@ -411,11 +389,7 @@ aria-label="[ZYNQ Cache一致性问题和使用](https://blog.csdn.net/wangjie36
 <div class="footnote-list">
 <ol>
 <li>
-<span id="fn:1" class="footnote-text"><span><a
-target="_blank" rel="noopener" href="https://blog.csdn.net/wangjie36/article/details/121460830">ZYNQ
-Cache一致性问题和使用</a>
-<a href="#fnref:1" rev="footnote" class="footnote-backref">
-↩︎</a></span></span>
+<span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://blog.csdn.net/wangjie36/article/details/121460830">ZYNQ Cache一致性问题和使用</a> <a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩︎</a></span></span>
 </li>
 </ol>
 </div>
@@ -497,7 +471,7 @@ Cache一致性问题和使用</a>
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年2月5日</div>
+          <div>2025年8月25日</div>
         </div>
       
       

@@ -27,7 +27,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/a.png">
 <meta property="article:published_time" content="2023-02-04T11:32:01.000Z">
-<meta property="article:modified_time" content="2023-02-05T08:29:55.839Z">
+<meta property="article:modified_time" content="2025-08-25T09:36:43.950Z">
 <meta property="article:author" content="ZoroGH">
 <meta property="article:tag" content="ZYNQ">
 <meta property="article:tag" content="可重构">
@@ -312,33 +312,16 @@
               <div class="markdown-body">
                 
                 <h1 id="intro-concept">Intro &amp; Concept</h1>
-<p>这学期开始着手做毕设了，毕设里一个重要的组成部分是使用Zynq7020实现可重构技术，大概的目标是板子上电后，能从存储器（Flash、ROM啥啥啥的）中读取bit
-stream并将其下载到PL端。网上参考都是利用PS把<strong>bit
-stream</strong>下载到PL端。注意，这里是全局重构（Full
-configuration，我瞎起的名字），指的是把完整的bit
-stream文件下载到PL端，而与之对应的还有另外一种技术叫<strong><em>Partial
-Reconfiguration</em></strong>，本人暂时还妹学会，跳过。</p>
-<p>为什么是从PS下载到PL端，而不能直接把bit
-stream下载到PL端呢？<s>当然是没有参考我不会写啦。</s>实际上这是对ZYNQ整个架构的理解问题。</p>
-<p>ZYNQ一般被看成PS+PL，但是在下载程序时的PS与PL实际上地位不等，不能简单的认为是ARM芯片+FPGA芯片，然后中间用许多线连着。（虽然也可以这么说）参考<em>UG585
-Chapter 6 Figure
-6-1</em>，这里很明显可以看到在ZYNQ启动后（假设是从Flash启动），那么APU会先执行BootROM，然后是FSBL、SSBL，在非安全模式下（non-secure
-mode），PL端是在FSBL和SSBL期间被Programed。</p>
+<p>这学期开始着手做毕设了，毕设里一个重要的组成部分是使用Zynq7020实现可重构技术，大概的目标是板子上电后，能从存储器（Flash、ROM啥啥啥的）中读取bit stream并将其下载到PL端。网上参考都是利用PS把<strong>bit stream</strong>下载到PL端。注意，这里是全局重构（Full configuration，我瞎起的名字），指的是把完整的bit stream文件下载到PL端，而与之对应的还有另外一种技术叫<strong><em>Partial Reconfiguration</em></strong>，本人暂时还妹学会，跳过。</p>
+<p>为什么是从PS下载到PL端，而不能直接把bit stream下载到PL端呢？<s>当然是没有参考我不会写啦。</s>实际上这是对ZYNQ整个架构的理解问题。</p>
+<p>ZYNQ一般被看成PS+PL，但是在下载程序时的PS与PL实际上地位不等，不能简单的认为是ARM芯片+FPGA芯片，然后中间用许多线连着。（虽然也可以这么说）参考<em>UG585 Chapter 6 Figure 6-1</em>，这里很明显可以看到在ZYNQ启动后（假设是从Flash启动），那么APU会先执行BootROM，然后是FSBL、SSBL，在非安全模式下（non-secure mode），PL端是在FSBL和SSBL期间被Programed。</p>
 <blockquote>
-<p>The FSBLcode can <strong>clear</strong>, program and
-<strong>enable</strong> the PL.</p>
+<p>The FSBLcode can <strong>clear</strong>, program and <strong>enable</strong> the PL.</p>
 </blockquote>
 <p><img src="http://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/image-20230116175747052.png" srcset="/img/loading.gif" lazyload alt="image-20230116175747052"  /></p>
-<p>这就意味着PL是后于PS启动。继续阅读<em>UG585 Chapter
-6</em>，这里摘一下文档。</p>
+<p>这就意味着PL是后于PS启动。继续阅读<em>UG585 Chapter 6</em>，这里摘一下文档。</p>
 <blockquote>
-<p><strong>The PL can be configured and reconfigured by PS software in
-secure or non-secure mode. The PCAP</strong> <strong>path is the most
-commonly deployed method as it does not require that the PL be
-pre-programmed</strong> <strong>with a bitstream.</strong> The PL can
-also be configured by the TAP controller on the JTAG chain in non-secure
-mode. Multiplexing of the datapath is done in the PL configuration
-module using the devc.CTRL [PCAP_MODE] and [PCAP_PR] bits.</p>
+<p><strong>The PL can be configured and reconfigured by PS software in secure or non-secure mode. The PCAP</strong> <strong>path is the most commonly deployed method as it does not require that the PL be pre-programmed</strong> <strong>with a bitstream.</strong> The PL can also be configured by the TAP controller on the JTAG chain in non-secure mode. Multiplexing of the datapath is done in the PL configuration module using the devc.CTRL [PCAP_MODE] and [PCAP_PR] bits.</p>
 <p>-- from 6.1.8 PL Configuration Paths.</p>
 </blockquote>
 <p>这段话就表明了可重构技术是可能实现的。（废话</p>
@@ -349,18 +332,12 @@ module using the devc.CTRL [PCAP_MODE] and [PCAP_PR] bits.</p>
 <li>PCAP Path</li>
 <li>ICAP Path</li>
 </ul>
-<p>三条路都可以对PL进行配置（配置指configure，烧写比特流）。但<code>ICAP Path</code>需要占用PL的逻辑，对于部署而言不友好，处于一个很尴尬的地位。那剩下的两条路，JTAG模式是在调试环境下使用，实际生产工作环境中，PS端从Flash读取启动镜像后，就会通过<code>PCAP Path</code>来Program
-PL。因此，在启动阶段，可以把PL看成PS的一个外设，下载数据的通路即是PCAP
-Path。可以看到图中两个多路选择器实际上都是devc的寄存器值，所以可重构的关键就是正确配置devc的寄存器。具体编程指南参考UG585
-Chapter 6，（虽然我也妹读完呐）。</p>
+<p>三条路都可以对PL进行配置（配置指configure，烧写比特流）。但<code>ICAP Path</code>需要占用PL的逻辑，对于部署而言不友好，处于一个很尴尬的地位。那剩下的两条路，JTAG模式是在调试环境下使用，实际生产工作环境中，PS端从Flash读取启动镜像后，就会通过<code>PCAP Path</code>来Program PL。因此，在启动阶段，可以把PL看成PS的一个外设，下载数据的通路即是PCAP Path。可以看到图中两个多路选择器实际上都是devc的寄存器值，所以可重构的关键就是正确配置devc的寄存器。具体编程指南参考UG585 Chapter 6，（虽然我也妹读完呐）。</p>
 <p>理论成立，实践开始。</p>
 <h1 id="start-code">Start Code</h1>
 <h2 id="preparation">Preparation</h2>
-<p>本次实验使用的是Alinx7020开发板，连接电源线、UART、JTAG。一通操作，创建Vivado工程、创建Block
-Design、添加ZYNQ
-IP核、打开MIO的QSPI（后续要用）、UART、GPIO（optional）。添加好后继续无脑操作，Auto连线、Validate验证、Wrapper、Generate，导出硬件，打开SDK，创建空工程。</p>
-<p>另外，要提前准备一份比特流，并通过JTAG下载到PL端进行验证，记住该bit流的效果。笔者准备了一个LED闪烁的bit
-stream，这里记住，从PS端烧写到PL端的不是<code>.bit</code>文件，而是比特流对应的<code>.bin</code>文件，通过Vivado自带的工具可以进行转换。</p>
+<p>本次实验使用的是Alinx7020开发板，连接电源线、UART、JTAG。一通操作，创建Vivado工程、创建Block Design、添加ZYNQ IP核、打开MIO的QSPI（后续要用）、UART、GPIO（optional）。添加好后继续无脑操作，Auto连线、Validate验证、Wrapper、Generate，导出硬件，打开SDK，创建空工程。</p>
+<p>另外，要提前准备一份比特流，并通过JTAG下载到PL端进行验证，记住该bit流的效果。笔者准备了一个LED闪烁的bit stream，这里记住，从PS端烧写到PL端的不是<code>.bit</code>文件，而是比特流对应的<code>.bin</code>文件，通过Vivado自带的工具可以进行转换。</p>
 <p>选择<code>Generate Memory Configuration File...</code>，</p>
 <p><img src="http://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/image-20230204210839579.png" srcset="/img/loading.gif" lazyload alt="image-20230204210839579"  /></p>
 <p>参数如下，该操作即将<code>.bit</code>文件转换为<code>.bin</code>文件。</p>
@@ -373,20 +350,13 @@ stream，这里记住，从PS端烧写到PL端的不是<code>.bit</code>文件�
 <p>很明显，这里DMA传输的目的地为PL端，参考程序中只需要修改源地址和数据长度即可将任意bit流下载到PL端。例程中的宏定义<code>BIT_STREAM_LOCATION</code>以及<code>BIT_STREAM_SIZE_WORDS</code>，可以认为是一种不安全的操作，直接指定地址会造成数据的冲突。</p>
 <h2 id="experiment">Experiment</h2>
 <h3 id="从ddr到pl">从DDR到PL</h3>
-<p>例程即是从DDR的某一个地址将bit文件通过DMA的方式传输到PL端。使用Xilinx
-SDK自带的工具将预先准备好的二进制文件</p>
+<p>例程即是从DDR的某一个地址将bit文件通过DMA的方式传输到PL端。使用Xilinx SDK自带的工具将预先准备好的二进制文件</p>
 <figure>
-<img
-src="http://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/image-20230204210807644.png" srcset="/img/loading.gif" lazyload
-alt="image-20230204210807644" />
-<figcaption aria-hidden="true">image-20230204210807644</figcaption>
+<img src="http://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/image-20230204210807644.png" srcset="/img/loading.gif" lazyload alt="image-20230204210807644" /><figcaption aria-hidden="true">image-20230204210807644</figcaption>
 </figure>
 <p>配置示例如下：</p>
 <figure>
-<img
-src="http://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/image-20230204211528008.png" srcset="/img/loading.gif" lazyload
-alt="image-20230204211528008" />
-<figcaption aria-hidden="true">image-20230204211528008</figcaption>
+<img src="http://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/image-20230204211528008.png" srcset="/img/loading.gif" lazyload alt="image-20230204211528008" /><figcaption aria-hidden="true">image-20230204211528008</figcaption>
 </figure>
 <p>注意这里的写到DDR内存中的地址一定要注意，不能超出实际DDR的内存空间，地址也不能过低，由于运行PS端裸机代码运行过程中一般都会在较低的地址运行程序，因此需要避开低地址空间。（这也是这段例程最不好的地方，直接访问一个地址，既不安全也不可靠。）</p>
 <p>注意，在将文件Restore进Memory之前，首先需要运行一下CPU，直接run，不管结果如何，目的是先让CPU启动。</p>
@@ -467,7 +437,7 @@ alt="image-20230204211528008" />
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年2月5日</div>
+          <div>2025年8月25日</div>
         </div>
       
       
