@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>独热码检测</title>
+    <link href="/2025/08/27/one-hot-detection/"/>
+    <url>/2025/08/27/one-hot-detection/</url>
+    
+    <content type="html"><![CDATA[<p>最近秋招遇到了一个比较常见的问题是独热码的检测。</p><h2 id="问题">问题</h2><p>该问题有多个表述，给定一个<code>N</code>bit向量</p><ul><li>检测是否是独热码</li><li>检测该信号是否为2的幂次</li></ul><h2 id="思路">思路</h2><p>独热码的特点是只有1bit为1，其余均为0。 假设独热码为：<code>0b00010000</code>，将该数字减去1得到<code>0b00001111</code>， 进行简单的一个与操作可以得到</p><figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs verilog"><span class="hljs-number">0</span>b00010000 &amp;<br><span class="hljs-number">0</span>b00001111 =<br><span class="hljs-number">0</span>b00000000<br></code></pre></td></tr></table></figure><p>利用利用这刚好错开的位置来完成1bit的检测。 发现结果是全0，检查边界条件发现全0输入也能满足上述运算过程，因此需要额外进行判断，参考代码如下</p><figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs verilog"><span class="hljs-keyword">assign</span> is_one_hot_code =  (vec&amp;(vec-<span class="hljs-number">1</span>) == <span class="hljs-number">0</span>) &amp;&amp; (vec!=<span class="hljs-number">0</span>) ; <br></code></pre></td></tr></table></figure><h2 id="分析">分析</h2><p>在上面这个问题里面，能发现的是一个比较有意思的操作，减法，得到的是<code>0b000...011...11</code>类似于这种形式的信号，非常适合用于当mask信号。</p><p>这里插一个题外话，即补码，给定一个向量，计算其补码，书上讲的方法是，从低位开始找到第一个1，将这个1保持不变，更高位的信号全部取反即可。 <code>0b101000</code> -&gt;<code>0b011000</code>，这两个信号与在一起得到的是独热码，而且这个独热码是原始信号中最低位的1。于是我们有了这个操作：<code>vec &amp; (-vec)</code>。 这个操作根据Gemini的回答叫做隔离最低位的1。 于是可以根据得到的独热码来生成类似的mask信号。总结下来有如下的几种信号形式</p><ol type="1"><li>random vector</li><li>one hot code</li><li>前面为0后面为1的mask向量，分为是否包含one_hot那一位2种情况</li><li>前面为1后面为0的mask向量，分为是否包含one_hot那一位2种情况</li></ol><p>若不考虑输入向量为全0的情况，那么</p><figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs verilog"><span class="hljs-keyword">assign</span> one_hot = vec &amp; (-vec);<br><span class="hljs-keyword">assign</span> mask1 = (one_hot - <span class="hljs-number">1</span>);<br><span class="hljs-keyword">assign</span> mask2 = (one_hot - <span class="hljs-number">1</span>) | one_hot;<br><span class="hljs-keyword">assign</span> mask3 = ~mask1;<br><span class="hljs-keyword">assign</span> mask4 = ~mask2;<br></code></pre></td></tr></table></figure><p>于是我们就能从一个任意的向量，生成对应的这类信号，反过来，当要生成这些信号的时候，无非就2个操作，<code>vec-1</code>和<code>vec&amp;(-vec)</code>，当然这里的取负数可以用取反加一的方式来进行。 至此，独热码检测以及相关的逻辑便结束了。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>FPGA</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>FPGA</tag>
+      
+      <tag>独热码</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>FPGA时钟无毛刺切换电路</title>
     <link href="/2025/08/25/glitch-free-clock-switching/"/>
     <url>/2025/08/25/glitch-free-clock-switching/</url>
