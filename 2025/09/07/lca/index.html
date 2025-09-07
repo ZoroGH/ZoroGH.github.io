@@ -18,24 +18,30 @@
   <meta name="author" content="ZoroGH">
   <meta name="keywords" content="ZoroGH">
   
-    <meta name="description" content="摘要">
+    <meta name="description" content="简单记录一下超前进位加法器">
 <meta property="og:type" content="article">
-<meta property="og:title" content="写博客的目的是什么">
-<meta property="og:url" content="https://blog.zorogh.top/2023/01/11/%E5%86%99%E5%8D%9A%E5%AE%A2%E7%9A%84%E7%9B%AE%E7%9A%84%E6%98%AF%E4%BB%80%E4%B9%88/index.html">
+<meta property="og:title" content="超前进位加法器">
+<meta property="og:url" content="https://blog.zorogh.top/2025/09/07/lca/index.html">
 <meta property="og:site_name" content="ZoroGH&#39;s Blog">
-<meta property="og:description" content="摘要">
+<meta property="og:description" content="简单记录一下超前进位加法器">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-01-11T11:49:30.000Z">
+<meta property="og:image" content="https://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/lca-w-fold.png">
+<meta property="og:image" content="https://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/lca-w-unfold.png">
+<meta property="og:image" content="https://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/lca-r-fold.png">
+<meta property="og:image" content="https://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/lca-r-unfold.png">
+<meta property="article:published_time" content="2025-09-07T02:57:31.000Z">
 <meta property="article:modified_time" content="2025-09-07T05:05:33.966Z">
 <meta property="article:author" content="ZoroGH">
-<meta property="article:tag" content="ZoroGH">
+<meta property="article:tag" content="FPGA">
+<meta property="article:tag" content="加法器">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/lca-w-fold.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>写博客的目的是什么 - ZoroGH&#39;s Blog</title>
+  <title>超前进位加法器 - ZoroGH&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -232,7 +238,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="写博客的目的是什么"></span>
+            <span id="subtitle" data-typed-text="超前进位加法器"></span>
           
         </div>
 
@@ -243,8 +249,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-01-11 19:49" pubdate>
-          2023年1月11日 晚上
+        <time datetime="2025-09-07 10:57" pubdate>
+          2025年9月7日 上午
         </time>
       </span>
     
@@ -255,7 +261,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          296 字
+          1k 字
         
       </span>
     
@@ -266,7 +272,7 @@
         
         
         
-          3 分钟
+          9 分钟
         
       </span>
     
@@ -303,25 +309,50 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">写博客的目的是什么</h1>
+            <h1 id="seo-header">超前进位加法器</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="写博客的目的是什么">写博客的目的是什么？</h1>
-<center>
-<b>
-<p style="font-size:24px">
-日拱一卒，功不唐捐
-</p>
-</b>
-</center>
-<h2 id="原因之一">原因之一</h2>
-<p>曾经遇到过很多次这种情况，就是当我使用某一个“即时的”知识点时，直接去网上搜索就能找到答案，比如某一个语法、某一个bug，然后立马执行便能解决问题。但是过了一段时间，也许不超过半天，当再次遇到这个bug时，又需要重新去检索这些知识，这就造成了时间的浪费，不如用碎片时间将这些小bug的解决办法集中起来，这样就降低了检索难度。</p>
-<h2 id="原因之二">原因之二</h2>
-<p>做工程需要在各个领域反复横跳，往往是记不住一些知识点，甚至最后忘得一干二净，导致收获随着时间会不断流失。因此记录下当时的收获很有必要。</p>
-<h2 id="原因之三">原因之三</h2>
-<p>加强印象，积累。写博客不像做笔记，博客是写给别人看的，笔记是写给自己看的，尽量让知识传播的门槛降低，这样也有助于未来再看博客时加深自己的理解。</p>
+                <p>简单记录一下超前进位加法器（Lookahead carrier adder），这里就不讲解行波进位了。</p>
+<p>超前进位加法器的本质，就是把前级的加法结果全部获取到后直接计算出当前位的加法结果以及进位，为了方便Coding，假设下标从0开始，输入信号为<code>N</code>bit向量<code>A</code>与<code>B</code>以及进位输入<code>Ci</code>，输出<code>N</code>bit向量<code>S</code>和进位输出<code>Co</code>。</p>
+<p>首先产生进位传递项<code>P</code>和进位产生项<code>G</code>，这其实是半加器的结果： <span class="math display">\[
+\begin{align}
+P_i&amp;=A_i\oplus B_i&amp;, 0\le i \le N-1
+\\
+G_i&amp;=A_i B_i &amp; , 0\le i \le N-1
+\end{align}
+\]</span> 然后就是根据<code>P</code>和<code>G</code>来产生<code>S</code>和进位输出<code>Co</code> <span class="math display">\[
+\begin{align}
+    S_i &amp;= P_i\oplus C_{i-1}
+    \\
+    C_i &amp;= G_i + P_iC_{i-1}
+\end{align}
+\]</span> 需要注意的是，这里的<span class="math inline">\(C_{-1}\)</span>即为输入的信号<code>Ci</code>，而最终的<code>Co</code>，应该是<span class="math inline">\(C_{N-1}\)</span>，在Coding的时候，这个进位会多一位，可以把<span class="math inline">\(S_i\)</span>的生成表达式中<span class="math inline">\(C_{i-1}\)</span>替换为<span class="math inline">\(C&#39;_{i}=C_{i-1}\)</span>，这样描述起来更加方便。上面这个式子本质上来看没有完成超前进位的功能，仅仅是描述了递推关系式，这个其实还是一个行波进位，但就是因为存在这个超前进位的递推式子，从而可以将<span class="math inline">\(C_i\)</span>展开为<span class="math inline">\(P\)</span>和<span class="math inline">\(G\)</span>的组合逻辑，比如<span class="math inline">\(C_2\)</span>描述如下：</p>
+<p><strong>本人在这里犯了一个错误</strong></p>
+<p><span class="math display">\[
+C_2 = G_2+P_2(G_1 + P_1C_{-1})
+\]</span> 可以发现通过递推关系，将进位项都分解为<code>P</code>和<code>G</code>的组合逻辑，那么延迟就变成了1级组合逻辑了，由于<code>P</code>和<code>G</code>的产生不依赖前级进位，只是简单的半加器，因此延迟低，而递推又解决了前级进位依赖的问题，从而用面积换取了延迟。</p>
+<h2 id="错误写法">错误写法</h2>
+<p>对于一个4bit的超前进位加法器，verilog代码实现如下。</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs verilog"><span class="hljs-keyword">module</span> lca_4bit (<br>    <span class="hljs-keyword">input</span>       [<span class="hljs-number">3</span>:<span class="hljs-number">0</span>] A,<br>    <span class="hljs-keyword">input</span>       [<span class="hljs-number">3</span>:<span class="hljs-number">0</span>] B,<br>    <span class="hljs-keyword">input</span>             Ci,<br>    <span class="hljs-keyword">output</span> <span class="hljs-keyword">wire</span> [<span class="hljs-number">3</span>:<span class="hljs-number">0</span>] S,<br>    <span class="hljs-keyword">output</span> <span class="hljs-keyword">wire</span>       Co<br>);<br>	<br>    <span class="hljs-comment">// generate p and g</span><br>    <span class="hljs-keyword">wire</span> [<span class="hljs-number">3</span>:<span class="hljs-number">0</span>] p;<br>    <span class="hljs-keyword">wire</span> [<span class="hljs-number">3</span>:<span class="hljs-number">0</span>] g;<br>    <span class="hljs-keyword">wire</span> [<span class="hljs-number">4</span>:<span class="hljs-number">0</span>] c;<br><br>    <span class="hljs-keyword">assign</span> p    = A ^ B;<br>    <span class="hljs-keyword">assign</span> g    = A &amp; B;<br><br>    <span class="hljs-comment">// c, in fact c&#x27;_i = c_&#123;i-1&#125;</span><br>    <span class="hljs-keyword">assign</span> c[<span class="hljs-number">0</span>] = Ci;<br>    <span class="hljs-keyword">assign</span> c[<span class="hljs-number">1</span>] = g[<span class="hljs-number">0</span>] | (p[<span class="hljs-number">0</span>] &amp; (c[<span class="hljs-number">0</span>]));<br>    <span class="hljs-keyword">assign</span> c[<span class="hljs-number">2</span>] = g[<span class="hljs-number">1</span>] | (p[<span class="hljs-number">1</span>] &amp; (g[<span class="hljs-number">0</span>] | (p[<span class="hljs-number">0</span>] &amp; (c[<span class="hljs-number">0</span>]))));<br>    <span class="hljs-keyword">assign</span> c[<span class="hljs-number">3</span>] = g[<span class="hljs-number">2</span>] | (p[<span class="hljs-number">2</span>] &amp; (g[<span class="hljs-number">1</span>] | (p[<span class="hljs-number">1</span>] &amp; (g[<span class="hljs-number">0</span>] | (p[<span class="hljs-number">0</span>] &amp; (c[<span class="hljs-number">0</span>]))))));<br>    <span class="hljs-keyword">assign</span> c[<span class="hljs-number">4</span>] = g[<span class="hljs-number">3</span>] | (p[<span class="hljs-number">3</span>] &amp; (g[<span class="hljs-number">2</span>] | (p[<span class="hljs-number">2</span>] &amp; (g[<span class="hljs-number">1</span>] | (p[<span class="hljs-number">1</span>] &amp; (g[<span class="hljs-number">0</span>] | (p[<span class="hljs-number">0</span>] &amp; (c[<span class="hljs-number">0</span>]))))))));<br>    <span class="hljs-keyword">assign</span> Co   = c[<span class="hljs-number">4</span>];<br><br>    <span class="hljs-keyword">assign</span> S    = p ^ c[<span class="hljs-number">3</span>:<span class="hljs-number">0</span>];<br><br><span class="hljs-keyword">endmodule</span><br></code></pre></td></tr></table></figure>
+<p>仿真电路图如下所示：</p>
+<p><img src="https://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/lca-w-fold.png" srcset="/img/loading.gif" lazyload /></p>
+<p>展开后得到如下结果，会发现信号传播路径依然很长，这就表明了这仍然是一个行波进位，回到上面的表达式里面来，可以发现我只是带入了相关的表达式，但是并没有进行展开，这就是问题所在，也就意味着，后一级的进位仍然依赖于前一级的进位信号。</p>
+<p><img src="https://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/lca-w-unfold.png" srcset="/img/loading.gif" lazyload /></p>
+<h2 id="正确写法">正确写法</h2>
+<p>所以在对于表达式进行处理的时候，要完全展开才可以，参考刚才计算C2的例子：</p>
+<p><span class="math display">\[
+C_2 = G_2+P_2(G_1 + P_1C_{-1})= G_2+ P_2G_1+P_2P_1C_{-1}
+\]</span></p>
+<p>相当于必须要展开到<code>P</code>和<code>G</code>的与或形式才算完成了超前进位。</p>
+<p>更新后的代码如下：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs verilog"><span class="hljs-keyword">module</span> lca_4bit (<br>    <span class="hljs-keyword">input</span>       [<span class="hljs-number">3</span>:<span class="hljs-number">0</span>] A,<br>    <span class="hljs-keyword">input</span>       [<span class="hljs-number">3</span>:<span class="hljs-number">0</span>] B,<br>    <span class="hljs-keyword">input</span>             Ci,<br>    <span class="hljs-keyword">output</span> <span class="hljs-keyword">wire</span> [<span class="hljs-number">3</span>:<span class="hljs-number">0</span>] S,<br>    <span class="hljs-keyword">output</span> <span class="hljs-keyword">wire</span>       Co<br>);<br><br>    <span class="hljs-comment">// generate p and g</span><br>    <span class="hljs-keyword">wire</span> [<span class="hljs-number">3</span>:<span class="hljs-number">0</span>] p;<br>    <span class="hljs-keyword">wire</span> [<span class="hljs-number">3</span>:<span class="hljs-number">0</span>] g;<br>    <span class="hljs-keyword">wire</span> [<span class="hljs-number">4</span>:<span class="hljs-number">0</span>] c;<br><br>    <span class="hljs-keyword">assign</span> p    = A ^ B;<br>    <span class="hljs-keyword">assign</span> g    = A &amp; B;<br><br>    <span class="hljs-comment">// c, in fact c&#x27;_i = c_&#123;i-1&#125;</span><br>    <span class="hljs-keyword">assign</span> c[<span class="hljs-number">0</span>] = Ci;<br>    <span class="hljs-keyword">assign</span> c[<span class="hljs-number">1</span>] = g[<span class="hljs-number">0</span>] | p[<span class="hljs-number">0</span>] &amp; Ci;<br>    <span class="hljs-keyword">assign</span> c[<span class="hljs-number">2</span>] = g[<span class="hljs-number">1</span>] | p[<span class="hljs-number">1</span>] &amp; g[<span class="hljs-number">0</span>] | p[<span class="hljs-number">1</span>] &amp; p[<span class="hljs-number">0</span>] &amp; Ci;<br>    <span class="hljs-keyword">assign</span> c[<span class="hljs-number">3</span>] = g[<span class="hljs-number">2</span>] | p[<span class="hljs-number">2</span>] &amp; g[<span class="hljs-number">1</span>] | p[<span class="hljs-number">2</span>] &amp; p[<span class="hljs-number">1</span>] &amp; g[<span class="hljs-number">0</span>] | p[<span class="hljs-number">2</span>] &amp; p[<span class="hljs-number">1</span>] &amp; p[<span class="hljs-number">0</span>] &amp; Ci;<br>    <span class="hljs-keyword">assign</span> c[<span class="hljs-number">4</span>] = g[<span class="hljs-number">3</span>] | p[<span class="hljs-number">3</span>] &amp; g[<span class="hljs-number">2</span>] | p[<span class="hljs-number">3</span>] &amp; p[<span class="hljs-number">2</span>] &amp; g[<span class="hljs-number">1</span>] | p[<span class="hljs-number">3</span>] &amp; p[<span class="hljs-number">2</span>] &amp; p[<span class="hljs-number">1</span>] &amp; g[<span class="hljs-number">0</span>] | p[<span class="hljs-number">3</span>] &amp; p[<span class="hljs-number">2</span>] &amp; p[<span class="hljs-number">1</span>] &amp; p[<span class="hljs-number">0</span>] &amp; Ci;<br>    <span class="hljs-keyword">assign</span> Co   = c[<span class="hljs-number">4</span>];<br><br>    <span class="hljs-keyword">assign</span> S    = p ^ c[N-<span class="hljs-number">1</span>:<span class="hljs-number">0</span>];<br><br><span class="hljs-keyword">endmodule</span><br></code></pre></td></tr></table></figure>
+<p>仿真电路图如下：</p>
+<p><img src="https://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/lca-r-fold.png" srcset="/img/loading.gif" lazyload /></p>
+<p>展开得到</p>
+<p><img src="https://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/lca-r-unfold.png" srcset="/img/loading.gif" lazyload /></p>
+<p>这里其实发现modelsim综合时没有用到多输入的或门，反倒是能用到多输入的与门，这个问题还需要进一步的研究。</p>
 
                 
               </div>
@@ -330,6 +361,36 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/FPGA/" class="category-chain-item">FPGA</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/FPGA/" class="print-no-link">#FPGA</a>
+      
+        <a href="/tags/%E5%8A%A0%E6%B3%95%E5%99%A8/" class="print-no-link">#加法器</a>
+      
+    </div>
   
 </div>
 
@@ -339,8 +400,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>写博客的目的是什么</div>
-      <div>https://blog.zorogh.top/2023/01/11/写博客的目的是什么/</div>
+      <div>超前进位加法器</div>
+      <div>https://blog.zorogh.top/2025/09/07/lca/</div>
     </div>
     <div class="license-meta">
       
@@ -352,7 +413,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年1月11日</div>
+          <div>2025年9月7日</div>
         </div>
       
       
@@ -389,15 +450,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/02/04/ZYNQ-%E5%8F%AF%E9%87%8D%E6%9E%84%E6%8A%80%E6%9C%AFPCAP/" title="ZYNQ | 可重构技术PCAP(1)——例程学习">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">ZYNQ | 可重构技术PCAP(1)——例程学习</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2025/08/27/one-hot-detection/" title="独热码检测">
+                        <span class="hidden-mobile">独热码检测</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
@@ -417,7 +478,7 @@
         var options = Object.assign(
           {"clientID":"653e013f962d54c6619f","clientSecret":"2131d595f68c89e9a37831433a19f2854cbf003b","repo":"ZoroGH.github.io","owner":"ZoroGH","admin":["ZoroGH"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":true,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: 'df6a644aac57bcdb2db8d73454c42574'
+            id: 'd29ffe0b3b75b5eefe009153f2801d94'
           }
         )
         var gitalk = new Gitalk(options);
