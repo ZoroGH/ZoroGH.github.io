@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>门控时钟</title>
+    <link href="/2025/09/15/clk-gate/"/>
+    <url>/2025/09/15/clk-gate/</url>
+    
+    <content type="html"><![CDATA[<h1 id="时钟门控电路">时钟门控电路</h1><ol type="1"><li>直接与门</li></ol><figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs verilog"><span class="hljs-keyword">assign</span> clk_gate = clk &amp; en;<br></code></pre></td></tr></table></figure><p>直接用与门，那么<code>en</code>信号相对于<code>clk</code>是一个异步信号，所以容易出现毛刺。</p><ol start="2" type="1"><li>加锁存器</li></ol><figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs verilog"><span class="hljs-keyword">reg</span> en_latch;<br><span class="hljs-keyword">always</span> @(*) <span class="hljs-keyword">begin</span><br>    <span class="hljs-keyword">if</span>(~clk) <span class="hljs-keyword">begin</span><br>       en_latch = en; <br>    <span class="hljs-keyword">end</span><br><span class="hljs-keyword">end</span><br><br><span class="hljs-keyword">assign</span> clk_gate = clk &amp; en_latch;<br></code></pre></td></tr></table></figure><p>这里实际上也会出毛刺，在<code>en_latch</code>信号与<code>clk</code>到与门的路径上，存在差异，那么最终也会出现延迟，现在的单元库会直接把这个模块做到一起，把走线延迟做到相同，这样就避免了由于走线带来的毛刺问题。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>FPGA</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>FPGA</tag>
+      
+      <tag>门控时钟</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>超前进位加法器</title>
     <link href="/2025/09/07/lca/"/>
     <url>/2025/09/07/lca/</url>
