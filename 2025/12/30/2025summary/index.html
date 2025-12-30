@@ -18,29 +18,26 @@
   <meta name="author" content="ZoroGH">
   <meta name="keywords" content="ZoroGH">
   
-    <meta name="description" content="这篇博客主要记录了本人学习ZYNQ的PS端的部分GPIO的部分">
+    <meta name="description" content="2025年末总结">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ZYNQ | GPIO、MIO、EMIO">
-<meta property="og:url" content="https://blog.zorogh.top/2023/02/05/ZYNQ-MIO%E3%80%81EMIO/index.html">
+<meta property="og:title" content="2025summary">
+<meta property="og:url" content="https://blog.zorogh.top/2025/12/30/2025summary/index.html">
 <meta property="og:site_name" content="ZoroGH&#39;s Blog">
-<meta property="og:description" content="这篇博客主要记录了本人学习ZYNQ的PS端的部分GPIO的部分">
+<meta property="og:description" content="2025年末总结">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/image-20230205211220050.png">
-<meta property="og:image" content="http://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/image-20230205212958106.png">
-<meta property="og:image" content="http://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/image-20230205213504858.png">
-<meta property="article:published_time" content="2023-02-05T12:59:24.000Z">
+<meta property="og:image" content="https://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/_DSC2035_compressed.jpeg">
+<meta property="article:published_time" content="2025-12-30T16:16:05.000Z">
 <meta property="article:modified_time" content="2025-12-30T17:55:26.841Z">
 <meta property="article:author" content="ZoroGH">
-<meta property="article:tag" content="ZYNQ">
-<meta property="article:tag" content="GPIO">
+<meta property="article:tag" content="life">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/image-20230205211220050.png">
+<meta name="twitter:image" content="https://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/_DSC2035_compressed.jpeg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>ZYNQ | GPIO、MIO、EMIO - ZoroGH&#39;s Blog</title>
+  <title>2025summary - ZoroGH&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -231,13 +228,13 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/img/zoro5.jpg') no-repeat center center; background-size: cover;">
+     style="background: url('https://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/_DSC2035_compressed.jpeg') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="ZYNQ | GPIO、MIO、EMIO"></span>
+            <span id="subtitle" data-typed-text="2025summary"></span>
           
         </div>
 
@@ -248,8 +245,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-02-05 20:59" pubdate>
-          2023年2月5日 晚上
+        <time datetime="2025-12-31 00:16" pubdate>
+          2025年12月31日 凌晨
         </time>
       </span>
     
@@ -260,7 +257,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          190 字
+          1.3k 字
         
       </span>
     
@@ -271,7 +268,7 @@
         
         
         
-          2 分钟
+          12 分钟
         
       </span>
     
@@ -308,36 +305,36 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">ZYNQ | GPIO、MIO、EMIO</h1>
+            <h1 id="seo-header">2025summary</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="intro">Intro</h1>
-<p>MIO与EMIO是ZYNQ芯片PS部分一个相当重要的接口。GPIO是MIO的一部分，要了解GPIO，首先需要了解ZYNQ的整体架构。</p>
-<figure>
-<img src="http://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/image-20230205211220050.png" srcset="/img/loading.gif" lazyload alt="ZYNQ架构" /><figcaption aria-hidden="true">ZYNQ架构</figcaption>
-</figure>
-<p>ZYNQ主要由以下主要功能区块组成，这些模块均能在上图中找到对应的位置：</p>
-<ul>
-<li>Processing System(PS)
-<ul>
-<li>Application processor unit(APU)</li>
-<li>Memory interface</li>
-<li>I/O peripherals(IOP)</li>
-<li>Interconnect</li>
-</ul></li>
-<li>Programmable Logic(PL)</li>
-</ul>
-<p>GPIO处于IOP中，是一个外设，能通过MIO模块能对器件的引脚进行操作，同时也通过EMIO提供了对PL的访问能力（包括64个inputs和128个outputs）。</p>
-<blockquote>
-<p>The general purpose I/O (GPIO) peripheral provides software with observation and control of up to 54 device pins via the MIO module. It also provides access to 64 inputs from the Programmable Logic (PL) and 128 outputs to the PL through the EMIO interface. <strong>The GPIO is organized into four banks of registers</strong> that group related interface signals.</p>
-<p>Each GPIO is independently and dynamically programmed as input, output, or interrupt sensing. Software can read all GPIO values within a bank using a single load instruction, or write data to one or more GPIOs (within a range of GPIOs) using a single store instruction. The GPIO control and status registers are memory mapped at base address 0xE000_A000.</p>
-</blockquote>
-<p><img src="http://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/image-20230205212958106.png" srcset="/img/loading.gif" lazyload alt="GPIO Block Diagram" style="zoom: 67%;" /></p>
-<p>对GPIO的控制是通过一系列<strong><em>存储器映射（Memory Mapped）</em></strong>的寄存器实现的。</p>
-<p><img src="http://image-bed-of-zorogh.oss-cn-beijing.aliyuncs.com/img/image-20230205213504858.png" srcset="/img/loading.gif" lazyload alt="image-20230205213504858" style="zoom:80%;" /></p>
-<p>可以看到这里的MIO/EMIO与寄存器的连接方式都是一样的，</p>
+                <h1 id="年末记录">2025年末记录</h1>
+<p>今年从研二升到研三了，算是完成了简单的研究牲到研究生的转变了，年龄上正式进入第二个本命年了。</p>
+<h2 id="今年你都做了什么">今年你都做了什么?</h2>
+<p>学业方面的话，还是有一些进展的：</p>
+<ol type="1">
+<li>不那么顺利的完成了毕业论文的开题</li>
+<li>写完了自己人生第一篇也可能是最后一篇会议文章，虽然几乎没有含金量，并投出去了。</li>
+<li>进行了完整的秋招过程，找到了心仪的工作</li>
+</ol>
+<p>另外，毕业论文也有在写了，不过进展不是那么快，需要消耗一点时间来慢慢处理文字、公式和图表，虽然有AI的加持，但是这个最终的速度可能并没有想象中的那么快。</p>
+<p>今年也算是第一次开始完整尝试健身了，从1月份开始在家健身，到返校后持续的春夏季度健身直到秋招，发现健身是一个收益很高的事情，从精力角度看，自己在健身的一段时间内工作时间大脑更加清醒了，不至于那么昏昏沉沉。不过，为了秋招找工作也停止了健身，或许明年元旦就应该开始复健了。</p>
+<p>值得提醒的一点是，今年经历了比较严重的腰椎问题，虽然最后从X光上来看只是腰椎退化，但是也反映出日常生活的一些不良习惯，久坐、不运动、坐姿不正确。最后导致整个脊椎不在一个合理的状态下，这一点明年还需要改进改进。</p>
+<h2 id="有什么值得庆祝的呢">有什么值得庆祝的呢？</h2>
+<p>值得庆祝的点首先是学业上终于来到了最后一步写论文阶段，熬过了这一个阶段，后面就没有任何困难了。</p>
+<p>其次，五月份给自己投资了人生第一台相机，开始入门摄影坑，比较幸运拍到了很多好看的建筑、模特，还记录了师兄的婚礼，拍到照片的时候才真正认识到影响对于生活的意义，而这一点可能是以前的自己所缺失的。封面图是当时拍北理渐变树的时候想拍的一个对角线构图，只不过树没有那么茂密，天空部分比较多，其实我想更多的表达的是四季更迭的意思。</p>
+<p>还有，11月底去了一趟重庆旅游，这还是非常有意义的一件事，见到了朋友们，也拍了很多有意义的照片。</p>
+<p>最后，秋招找到好工作了，结论是比较满意。秋招整体来看，从8月份开始到10月底最终完成三方协议的所有流程，这个时间内学习到了很多，投递了大概150+个公司，测评、线上面试、线下面试了很多公司，最后是收到了6份Offer。 由于是从FPGA部分转向了数字IC设计，虽然自己的简历理论上看更适合去做硬件设计相关的内容，但是最后还是选择了IC设计，甚至在投递的过程中一度嫌弃FPGA岗位，无他，岗位太少了。 比较幸运的是，最终选择的公司是一个意外之喜，恰好在武汉，恰好公司也是我喜欢的比较年轻有活力的公司，希望未来能长久耕耘下去吧。</p>
+<h2 id="哪些事情没有做的那么好呢">哪些事情没有做的那么好呢？</h2>
+<p>从情绪稳定的角度上看，或许还需要更加稳定一些，不妨让自己说出每句话之前的思考时间变长一点，在做决策上应该更加理性。</p>
+<p>作息混乱，作息的根本原因是没有那么大的压力，习惯于摆烂，没有那么高的追求，所以沉溺于打游戏刷手机这种提高多巴胺阈值的事情中。持续性的摆烂导致回归正常生活的成本非常之高。作息混乱带来的问题其实非常之明显，记忆力、身体机能等各方面都在下降，虽然都有尝试过进行些许改变，但是仍然是没有坚持下来。</p>
+<h2 id="明年有什么期待吗">明年有什么期待吗？</h2>
+<p>期待的话，我或许最期待的是有一个良好的作息，让身体能量恢复到非常好的状态，能持续支持我做各种各样的事情。</p>
+<p>年初认为自己没有任何兴趣，对于事情的探索感觉非常之乏味。然而当实际拿起相机，去到各个景点，欣赏各种风景后才明白，不是没有任何兴趣，只是没有进行任何尝试罢了。或许以后也应该更加积极的去尝试新东西，切勿把自己圈起来。在离开北京之前，好好的逛一逛这个城市，体验一下不同的事务。</p>
+<p>健身，这一个事情慢慢来，也不强求自己能练出什么水平，健康就好，其实主要目标还是增重，这一点和作息是高度相关的。</p>
+<p>最后，我希望能顺利毕业，顺便期待一下未来的美好生活以及邂逅一段感情。</p>
 
                 
               </div>
@@ -356,7 +353,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/ZYNQ/" class="category-chain-item">ZYNQ</a>
+  <a href="/categories/%E7%94%9F%E6%B4%BB/" class="category-chain-item">生活</a>
   
   
 
@@ -371,9 +368,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/ZYNQ/" class="print-no-link">#ZYNQ</a>
-      
-        <a href="/tags/GPIO/" class="print-no-link">#GPIO</a>
+        <a href="/tags/life/" class="print-no-link">#life</a>
       
     </div>
   
@@ -385,8 +380,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>ZYNQ | GPIO、MIO、EMIO</div>
-      <div>https://blog.zorogh.top/2023/02/05/ZYNQ-MIO、EMIO/</div>
+      <div>2025summary</div>
+      <div>https://blog.zorogh.top/2025/12/30/2025summary/</div>
     </div>
     <div class="license-meta">
       
@@ -398,7 +393,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年2月5日</div>
+          <div>2025年12月31日</div>
         </div>
       
       
@@ -435,18 +430,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/06/03/%E5%A4%A7%E5%AD%A64%E5%B9%B4/" title="大学4年">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">大学4年</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/02/05/ZYNQ-QSPI%E6%8E%A7%E5%88%B6%E5%99%A8/" title="ZYNQ | QSPI控制器">
-                        <span class="hidden-mobile">ZYNQ | QSPI控制器</span>
+                      <a href="/2025/09/15/clk-gate/" title="门控时钟">
+                        <span class="hidden-mobile">门控时钟</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -469,7 +458,7 @@
         var options = Object.assign(
           {"clientID":"653e013f962d54c6619f","clientSecret":"2131d595f68c89e9a37831433a19f2854cbf003b","repo":"ZoroGH.github.io","owner":"ZoroGH","admin":["ZoroGH"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":true,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: '3356a1cfe90e3b237acb671198d52b2e'
+            id: '2cd0dce89f3c285bb38aff4951a04a50'
           }
         )
         var gitalk = new Gitalk(options);
